@@ -1,16 +1,19 @@
 import { Telegraf, Markup } from 'telegraf';
-import { create } from '../services/todo.js';
+import { saveUser } from '../services/user.js';
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-bot.start((ctx) => {
-  let message = ` Please use the /fact command to receive a new fact`;
-  ctx.reply(message);
+bot.start(async (ctx) => {
+  await saveUser({
+    ...ctx.update.message.from,
+    id_telegram: ctx.update.message.from.id,
+  });
+  ctx.reply('Bot start');
 });
 
 bot.command('test', async (ctx) => {
   try {
-    await create();
+    console.log(ctx.update.message.from);
     ctx.reply('Generating image, Please wait !!!');
   } catch (error) {
     console.error('error', error);

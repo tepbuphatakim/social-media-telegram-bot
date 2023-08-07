@@ -1,8 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../../database/index.js';
-// import app from '../../index.js';
-
-// const { sequelize } = app;
 
 class Todo extends Model {}
 

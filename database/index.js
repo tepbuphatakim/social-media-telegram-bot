@@ -13,4 +13,5 @@ try {
   console.error('Unable to connect to the database:', error);
 }
 
+console.warn('Sequelize init!!!');
 export default sequelize;

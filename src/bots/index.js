@@ -1,4 +1,5 @@
 import { Telegraf, Markup } from 'telegraf';
+import { create } from '../services/todo.js';
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -7,8 +8,9 @@ bot.start((ctx) => {
   ctx.reply(message);
 });
 
-bot.command('test', (ctx) => {
+bot.command('test', async (ctx) => {
   try {
+    await create();
     ctx.reply('Generating image, Please wait !!!');
   } catch (error) {
     console.error('error', error);

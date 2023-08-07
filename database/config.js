@@ -1,3 +1,5 @@
+import 'dotenv/config'; // In-case running migration related commande. Sequelize used this config first instead of going from root.
+
 const { DB_HOST, DB_DIALECT, DB_NAME, DB_USERNAME, DB_PASSWORD } = process.env;
 
 export default {

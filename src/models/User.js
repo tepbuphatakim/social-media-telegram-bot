@@ -1,23 +1,7 @@
 import { DataTypes } from 'sequelize';
 import BaseModel from './BaseModel.js';
 
-class User extends BaseModel {
-  static async upsert(user, condition = {}) {
-    try {
-      const item = await this.findOne({
-        where: condition,
-      });
-      if (item) {
-        return this.update(user, {
-          where: condition,
-        });
-      }
-      return this.create(user);
-    } catch (error) {
-      throw error;
-    }
-  }
-}
+class User extends BaseModel {}
 
 export const attributes = {
   id_user: {
@@ -53,7 +37,7 @@ export const attributes = {
 };
 
 User.init(attributes, {
-  ...BaseModel.config,
+  ...BaseModel.CONFIG,
   modelName: 'User',
   tableName: 'user',
 });

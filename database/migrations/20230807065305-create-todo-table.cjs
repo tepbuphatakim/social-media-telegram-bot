@@ -28,7 +28,7 @@ module.exports = {
       throw error;
     }
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     const transaction = await queryInterface.sequelize.transaction();
     try {
       await queryInterface.dropTable('todo');

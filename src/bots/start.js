@@ -3,9 +3,10 @@ import { Markup } from 'telegraf';
 import { saveUser } from '../services/user.js';
 
 bot.start(async (ctx) => {
+  const { id, ...from } = ctx.update.message.from;
   await saveUser({
-    ...ctx.update.message.from,
-    id_telegram: ctx.update.message.from.id,
+    ...from,
+    id_telegram: id,
   });
   ctx.reply('Bot start');
 });

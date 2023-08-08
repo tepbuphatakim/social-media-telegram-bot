@@ -22,7 +22,7 @@ export const attributes = {
 };
 
 Todo.init(attributes, {
-  ...BaseModel.config,
+  ...BaseModel.CONFIG,
   modelName: 'Todo',
   tableName: 'todo',
 });

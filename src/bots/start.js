@@ -1,7 +1,6 @@
-import { Telegraf, Markup } from 'telegraf';
+import bot from './bot.js';
+import { Markup } from 'telegraf';
 import { saveUser } from '../services/user.js';
-
-const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.start(async (ctx) => {
   await saveUser({
@@ -9,15 +8,6 @@ bot.start(async (ctx) => {
     id_telegram: ctx.update.message.from.id,
   });
   ctx.reply('Bot start');
-});
-
-bot.command('test', async (ctx) => {
-  try {
-    console.log(ctx.update.message.from);
-    ctx.reply('Generating image, Please wait !!!');
-  } catch (error) {
-    console.error('error', error);
-  }
 });
 
 bot.command('custom', async (ctx) => {
@@ -33,4 +23,11 @@ bot.command('custom', async (ctx) => {
   );
 });
 
-bot.launch();
+bot.command('test', async (ctx) => {
+  try {
+    console.log(ctx.update.message.from);
+    ctx.reply('Generating image, Please wait !!!');
+  } catch (error) {
+    console.error('error', error);
+  }
+});

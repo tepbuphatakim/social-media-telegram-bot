@@ -1,3 +1,4 @@
 import 'dotenv/config';
-import './database/index.js';
-import './src/bots/index.js';
+
+import './src/bots/bot.js';
+import './src/bots/start.js';

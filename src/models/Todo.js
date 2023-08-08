@@ -1,7 +1,7 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../database/index.js';
+import { DataTypes } from 'sequelize';
+import BaseModel from './BaseModel.js';
 
-class Todo extends Model {}
+class Todo extends BaseModel {}
 
 export const attributes = {
   id_todo: {
@@ -22,16 +22,9 @@ export const attributes = {
 };
 
 Todo.init(attributes, {
-  sequelize,
+  ...BaseModel.config,
   modelName: 'Todo',
   tableName: 'todo',
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-  defaultScope: {
-    attributes: {
-      exclude: ['created_at', 'updated_at'],
-    },
-  },
 });
 
 export default Todo;

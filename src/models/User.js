@@ -1,7 +1,7 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../../database/index.js';
+import { DataTypes } from 'sequelize';
+import BaseModel from './BaseModel.js';
 
-class User extends Model {
+class User extends BaseModel {
   static async upsert(user, condition = {}) {
     try {
       const item = await this.findOne({
@@ -53,16 +53,9 @@ export const attributes = {
 };
 
 User.init(attributes, {
-  sequelize,
+  ...BaseModel.config,
   modelName: 'User',
   tableName: 'user',
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
-  defaultScope: {
-    attributes: {
-      exclude: ['created_at', 'updated_at'],
-    },
-  },
 });
 
 export default User;

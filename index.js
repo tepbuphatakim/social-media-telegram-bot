@@ -1,4 +1,6 @@
+import fs from 'fs';
 import 'dotenv/config';
 
-import './src/bots/bot.js';
-import './src/bots/start.js';
+fs.readdirSync('./src/bots').forEach((file) => {
+  import(`./src/bots/${file}`);
+});

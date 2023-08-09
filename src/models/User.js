@@ -34,6 +34,18 @@ export const attributes = {
     type: DataTypes.STRING(4),
     allowNull: true,
   },
+  pf_photo: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  pf_name: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  pf_description: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 };
 
 User.init(attributes, {

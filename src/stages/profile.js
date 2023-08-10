@@ -1,4 +1,3 @@
-import bot from './bot.js';
 import { Composer, Scenes } from 'telegraf';
 import { message } from 'telegraf/filters';
 import { saveFileFromURL } from '../services/storage.js';
@@ -13,7 +12,7 @@ profileUpload.on(message('photo'), async (ctx) => {
       from: { id },
     },
   } = ctx;
-  const url = await bot.telegram.getFileLink(photos.at(-1).file_id);
+  const url = await ctx.telegram.getFileLink(photos.at(-1).file_id);
   const path = await saveFileFromURL(url);
   await saveUser({
     pf_photo: path,
@@ -59,8 +58,4 @@ const profileWizard = new Scenes.WizardScene(
   }
 );
 
-export default profileWizard
-// export default new Scenes.Stage([profileWizard]);
-
-// bot.use(session());
-// bot.use(stage.middleware());
+export default profileWizard;

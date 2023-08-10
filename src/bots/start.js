@@ -3,7 +3,7 @@ import { Markup } from 'telegraf';
 import { saveUser } from '../services/user.js';
 
 bot.start(async (ctx) => {
-  const { id, ...from } = ctx.update.message.from;
+  const { id, ...from } = ctx.message.from;
   await saveUser({
     ...from,
     id_telegram: id,
@@ -26,7 +26,7 @@ bot.command('custom', async (ctx) => {
 
 bot.command('test', async (ctx) => {
   try {
-    console.log(ctx.update.message.from);
+    console.log(ctx.message.from);
     ctx.reply('Generating image, Please wait !!!');
   } catch (error) {
     console.error('error', error);

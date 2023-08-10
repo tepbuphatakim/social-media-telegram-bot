@@ -1,5 +1,5 @@
 import bot from './bot.js';
-import { Composer, Scenes, session } from 'telegraf';
+import { Composer, Scenes } from 'telegraf';
 import { message } from 'telegraf/filters';
 import { saveFileFromURL } from '../services/storage.js';
 import { saveUser } from '../services/user.js';
@@ -59,11 +59,8 @@ const profileWizard = new Scenes.WizardScene(
   }
 );
 
-const stage = new Scenes.Stage([profileWizard]);
+export default profileWizard
+// export default new Scenes.Stage([profileWizard]);
 
-bot.use(session());
-bot.use(stage.middleware());
-
-bot.command('profile', (ctx) => {
-  ctx.scene.enter('profile-wizard');
-});
+// bot.use(session());
+// bot.use(stage.middleware());

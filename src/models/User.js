@@ -38,6 +38,10 @@ export const attributes = {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  pf_photo_telegram_server: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   pf_name: {
     type: DataTypes.STRING,
     allowNull: true,

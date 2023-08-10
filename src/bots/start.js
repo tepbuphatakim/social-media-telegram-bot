@@ -9,6 +9,7 @@ bot.start(async (ctx) => {
     id_telegram: id,
   });
   ctx.reply('Bot start');
+  ctx.scene.enter('feed-scene');
 });
 
 bot.command('custom', async (ctx) => {

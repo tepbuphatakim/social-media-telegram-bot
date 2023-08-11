@@ -9,7 +9,7 @@ feedScene.enter((ctx) => {
   return ctx.reply(
     'Click keyboard to feed.',
     Markup.keyboard([
-      [Markup.button.callback('🔍 Feed'), Markup.button.callback('🔍 Post')],
+      [Markup.button.callback('🔍 Feed'), Markup.button.callback('🌏 Post')],
     ]).resize()
   );
 });
@@ -27,7 +27,7 @@ feedScene.hears('🔍 Feed', async (ctx) => {
     console.error(error);
   }
 });
-feedScene.hears('🔍 Post', (ctx) => {
+feedScene.hears('🌏 Post', (ctx) => {
   ctx.scene.enter('post-wizard');
 });
 feedScene.leave((ctx) => ctx.reply('Leave feed.'));

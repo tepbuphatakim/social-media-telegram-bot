@@ -9,13 +9,13 @@ profileScene.enter((ctx) => {
     'Click keyboard for your desire action.',
     Markup.keyboard([
       [
-        Markup.button.callback('🔍 My profile'),
-        Markup.button.callback('🔍 Setup profile'),
+        Markup.button.callback('💁 My profile'),
+        Markup.button.callback('👷 Setup profile'),
       ],
     ]).resize()
   );
 });
-profileScene.hears('🔍 My profile', async (ctx) => {
+profileScene.hears('💁 My profile', async (ctx) => {
   try {
     const { pf_photo, pf_name, pf_description } = await getUser(
       ctx.message.from.id
@@ -31,7 +31,7 @@ profileScene.hears('🔍 My profile', async (ctx) => {
     console.error(error);
   }
 });
-profileScene.hears('🔍 Setup profile', (ctx) => {
+profileScene.hears('👷 Setup profile', (ctx) => {
   ctx.scene.enter('setup-profile-wizard');
 });
 profileScene.leave((ctx) => ctx.reply('Leave profile.'));

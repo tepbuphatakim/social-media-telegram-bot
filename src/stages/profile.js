@@ -1,10 +1,40 @@
-import { Composer, Scenes } from 'telegraf';
+import { Composer, Scenes, Markup } from 'telegraf';
 import { message } from 'telegraf/filters';
-import { saveFileFromURL } from '../services/storage.js';
-import { saveUser } from '../services/user.js';
+import { readFile, saveFileFromURL } from '../services/storage.js';
+import { getUser, saveUser } from '../services/user.js';
+
+const profileScene = new Scenes.BaseScene('profile-scene');
+profileScene.enter((ctx) => {
+  return ctx.reply(
+    'Click keyboard for your desire action.',
+    Markup.keyboard([
+      Markup.button.callback('🔍 My profile'),
+      Markup.button.callback('🔍 Setup profile'),
+    ]).resize()
+  );
+});
+profileScene.hears('🔍 My profile', async (ctx) => {
+  try {
+    const { pf_photo, pf_name, pf_description } = await getUser(
+      ctx.message.from.id
+    );
+    ctx.replyWithPhoto(
+      { source: readFile(pf_photo) },
+      {
+        caption: `${pf_name} | ${pf_description}`,
+        parse_mode: 'Markdown',
+      }
+    );
+  } catch (error) {
+    console.error(error);
+  }
+});
+profileScene.hears('🔍 Setup profile', (ctx) => {
+  ctx.scene.enter('setup-profile-wizard');
+});
+profileScene.leave((ctx) => ctx.reply('Leave profile.'));
 
 const profileUpload = new Composer();
-
 profileUpload.on(message('photo'), async (ctx) => {
   const {
     message: {
@@ -54,8 +84,8 @@ const setupProfileWizard = new Scenes.WizardScene(
       pf_description: text,
       id_telegram: id,
     });
-    return ctx.scene.leave();
+    return ctx.scene.enter('profile-scene');
   }
 );
 
-export default setupProfileWizard;
+export default [profileScene, setupProfileWizard];

@@ -1,10 +1,10 @@
 import { Telegraf, session, Scenes } from 'telegraf';
-import profileWizard from '../stages/profile.js';
+import profileStage from '../stages/profile.js';
 import feedScene from '../stages/feed.js';
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-const stage = new Scenes.Stage([profileWizard, feedScene]);
+const stage = new Scenes.Stage([...profileStage, feedScene]);
 
 bot.use(session());
 bot.use(stage.middleware());

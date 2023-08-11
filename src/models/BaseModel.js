@@ -2,7 +2,7 @@ import { Model } from 'sequelize';
 import sequelize from '../../database/index.js';
 
 class BaseModel extends Model {
-  static async createOrUpdate(user, condition = {}) {
+  static async createOrUpdate(user, condition) {
     const item = await this.findOne({
       where: condition,
     });

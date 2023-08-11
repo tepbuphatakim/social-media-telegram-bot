@@ -8,8 +8,10 @@ profileScene.enter((ctx) => {
   return ctx.reply(
     'Click keyboard for your desire action.',
     Markup.keyboard([
-      Markup.button.callback('🔍 My profile'),
-      Markup.button.callback('🔍 Setup profile'),
+      [
+        Markup.button.callback('🔍 My profile'),
+        Markup.button.callback('🔍 Setup profile'),
+      ],
     ]).resize()
   );
 });

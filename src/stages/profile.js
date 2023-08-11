@@ -26,8 +26,8 @@ profileUpload.on('message', (ctx) => {
   ctx.reply('Please upload your profile photo.');
 });
 
-const profileWizard = new Scenes.WizardScene(
-  'profile-wizard',
+const setupProfileWizard = new Scenes.WizardScene(
+  'setup-profile-wizard',
   profileUpload,
   async (ctx) => {
     const {
@@ -58,4 +58,4 @@ const profileWizard = new Scenes.WizardScene(
   }
 );
 
-export default profileWizard;
+export default setupProfileWizard;

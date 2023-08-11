@@ -1,5 +1,5 @@
 import { Scenes, Markup } from 'telegraf';
-import { getOne } from '../services/feed.js';
+import { getFeed } from '../services/feed.js';
 import { readFile } from '../services/storage.js';
 
 const feedScene = new Scenes.BaseScene('feed-scene');
@@ -11,7 +11,7 @@ feedScene.enter((ctx) => {
   );
 });
 feedScene.hears('🔍 Feed', async (ctx) => {
-  const { photo, description } = await getOne();
+  const { photo, description } = await getFeed();
   ctx.replyWithPhoto(
     { source: readFile(photo) },
     {

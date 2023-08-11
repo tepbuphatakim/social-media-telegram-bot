@@ -5,3 +5,11 @@ export function saveUser(user) {
     id_telegram: user.id_telegram,
   });
 }
+
+export function getUser(id_telegram) {
+  return User.findOne({
+    where: {
+      id_telegram,
+    },
+  });
+}

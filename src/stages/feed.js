@@ -1,7 +1,12 @@
 import { Composer, Scenes, Markup } from 'telegraf';
 import { message } from 'telegraf/filters';
-import { getFeed, createFeed, updateFeed } from '../services/feed.js';
-import { getUser } from '../services/user.js';
+import {
+  getFeed,
+  getLatestFeedByIdUser,
+  createFeed,
+  updateFeed,
+} from '../services/feed.js';
+import { getUser, getUserById } from '../services/user.js';
 import { readFile, saveFileFromURL } from '../services/storage.js';
 
 const feedScene = new Scenes.BaseScene('feed-scene');
@@ -15,11 +20,12 @@ feedScene.enter((ctx) => {
 });
 feedScene.hears('🔍 Feed', async (ctx) => {
   try {
-    const { photo, description } = await getFeed();
+    const { id_user, photo, description } = await getFeed();
+    const { pf_name } = await getUserById(id_user);
     ctx.replyWithPhoto(
       { source: readFile(photo) },
       {
-        caption: `name | ${description}`,
+        caption: `${pf_name} | ${description}`,
         parse_mode: 'Markdown',
       }
     );
@@ -32,8 +38,6 @@ feedScene.hears('🌏 Post', (ctx) => {
 });
 feedScene.leave((ctx) => ctx.reply('Leave feed.'));
 
-let id_feed = null;
-
 const postUpload = new Composer();
 postUpload.on(message('photo'), async (ctx) => {
   const {
@@ -45,12 +49,11 @@ postUpload.on(message('photo'), async (ctx) => {
   const url = await ctx.telegram.getFileLink(photos.at(-1).file_id);
   const path = await saveFileFromURL(url);
   const { id_user } = await getUser(id);
-  const feed = await createFeed({
+  await createFeed({
     photo: path,
     photo_telegram_server: url.href,
     id_user,
   });
-  id_feed = feed.id_feed;
 
   await ctx.reply('Please enter your post description.');
   return ctx.wizard.next();
@@ -65,7 +68,10 @@ const postWizard = new Scenes.WizardScene(
   async (ctx) => {
     const {
       message: { text },
+      from: { id },
     } = ctx;
+    const { id_user } = await getUser(id);
+    const { id_feed } = await getLatestFeedByIdUser(id_user);
     await updateFeed(id_feed, {
       description: text,
     });

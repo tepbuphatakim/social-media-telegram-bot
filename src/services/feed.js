@@ -7,6 +7,15 @@ export function getFeed() {
   });
 }
 
+export function getLatestFeedByIdUser(id_user) {
+  return Feed.findOne({
+    where: {
+      id_user,
+    },
+    order: [['id_feed', 'DESC']],
+  });
+}
+
 export function createFeed(feed) {
   return Feed.create(feed);
 }

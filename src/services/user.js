@@ -13,3 +13,7 @@ export function getUser(id_telegram) {
     },
   });
 }
+
+export function getUserById(id_user) {
+  return User.findByPk(id_user);
+}

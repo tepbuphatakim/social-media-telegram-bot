@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    depends_on:
+      - mariadb
+    networks:
+      - tweet-elite
+
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - '3310:3306'
+    environment:
+      MARIADB_DATABASE: 'telegram_bot'
+      MARIADB_USER: 'root'
+      MARIADB_PASSWORD: 'root'
+      MARIADB_ROOT_PASSWORD: 'root'
+    networks:
+      - tweet-elite
+    volumes:
+      - mariadb-data:/var/lib/mysql
+
+networks:
+  tweet-elite:
+    driver: bridge
+
+volumes:
+  mariadb-data:

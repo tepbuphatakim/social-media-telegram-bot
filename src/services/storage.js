@@ -7,6 +7,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const storagePath = path.resolve(__dirname, '../../', 'storages');
 
+export function readFile(fileName) {
+  return fs.readFileSync(path.resolve(storagePath, fileName));
+}
+
 export async function saveFileFromURL(url) {
   const file = await axios.get(url, {
     responseType: 'arraybuffer',

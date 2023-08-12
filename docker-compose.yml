@@ -7,24 +7,26 @@ services:
       - mariadb
     networks:
       - tweet-elite
+    volumes:
+      - ./:/app
 
   mariadb:
     image: mariadb:latest
     ports:
       - '3310:3306'
     environment:
-      MARIADB_DATABASE: 'telegram_bot'
-      MARIADB_USER: 'root'
-      MARIADB_PASSWORD: 'root'
-      MARIADB_ROOT_PASSWORD: 'root'
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
     networks:
       - tweet-elite
     volumes:
-      - mariadb-data:/var/lib/mysql
+      - mariadb_tweet_elite:/var/lib/mysql
 
 networks:
   tweet-elite:
     driver: bridge
 
 volumes:
-  mariadb-data:
+  mariadb_tweet_elite:

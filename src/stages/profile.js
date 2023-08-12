@@ -20,7 +20,7 @@ profileScene.hears('💁 My profile', async (ctx) => {
     const { pf_photo, pf_name, pf_description } = await getUser(
       ctx.message.from.id
     );
-    ctx.replyWithPhoto(
+    return ctx.replyWithPhoto(
       { source: readFile(pf_photo) },
       {
         caption: `${pf_name} | ${pf_description}`,
@@ -29,6 +29,7 @@ profileScene.hears('💁 My profile', async (ctx) => {
     );
   } catch (error) {
     console.error(error);
+    return ctx.scene.enter('profile-scene');
   }
 });
 profileScene.hears('👷 Setup profile', (ctx) => {
@@ -38,21 +39,26 @@ profileScene.leave((ctx) => ctx.reply('Leave profile.'));
 
 const profileUpload = new Composer();
 profileUpload.on(message('photo'), async (ctx) => {
-  const {
-    message: {
-      photo: photos,
-      from: { id },
-    },
-  } = ctx;
-  const url = await ctx.telegram.getFileLink(photos.at(-1).file_id);
-  const path = await saveFileFromURL(url);
-  await saveUser({
-    pf_photo: path,
-    pf_photo_telegram_server: url.href,
-    id_telegram: id,
-  });
-  await ctx.reply('Please enter your profile name.');
-  return ctx.wizard.next();
+  try {
+    const {
+      message: {
+        photo: photos,
+        from: { id },
+      },
+    } = ctx;
+    const url = await ctx.telegram.getFileLink(photos.at(-1).file_id);
+    const path = await saveFileFromURL(url);
+    await saveUser({
+      pf_photo: path,
+      pf_photo_telegram_server: url.href,
+      id_telegram: id,
+    });
+    await ctx.reply('Please enter your profile name.');
+    return ctx.wizard.next();
+  } catch (error) {
+    console.error(error);
+    return ctx.scene.enter('setup-profile-wizard');
+  }
 });
 profileUpload.on('message', (ctx) => {
   ctx.reply('Please upload your profile photo.');
@@ -62,31 +68,41 @@ const setupProfileWizard = new Scenes.WizardScene(
   'setup-profile-wizard',
   profileUpload,
   async (ctx) => {
-    const {
-      message: {
-        text,
-        from: { id },
-      },
-    } = ctx;
-    await saveUser({
-      pf_name: text,
-      id_telegram: id,
-    });
-    await ctx.reply('Please enter your profile description.');
-    return ctx.wizard.next();
+    try {
+      const {
+        message: {
+          text,
+          from: { id },
+        },
+      } = ctx;
+      await saveUser({
+        pf_name: text,
+        id_telegram: id,
+      });
+      await ctx.reply('Please enter your profile description.');
+      return ctx.wizard.next();
+    } catch (error) {
+      console.error(error);
+      return ctx.scene.enter('setup-profile-wizard');
+    }
   },
   async (ctx) => {
-    const {
-      message: {
-        text,
-        from: { id },
-      },
-    } = ctx;
-    await saveUser({
-      pf_description: text,
-      id_telegram: id,
-    });
-    return ctx.scene.enter('profile-scene');
+    try {
+      const {
+        message: {
+          text,
+          from: { id },
+        },
+      } = ctx;
+      await saveUser({
+        pf_description: text,
+        id_telegram: id,
+      });
+      return ctx.scene.enter('profile-scene');
+    } catch (error) {
+      console.error(error);
+      return ctx.scene.enter('setup-profile-wizard');
+    }
   }
 );
 

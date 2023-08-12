@@ -22,7 +22,7 @@ feedScene.hears('🔍 Feed', async (ctx) => {
   try {
     const { id_user, photo, description } = await getFeed();
     const { pf_name } = await getUserById(id_user);
-    ctx.replyWithPhoto(
+    return ctx.replyWithPhoto(
       { source: readFile(photo) },
       {
         caption: `${pf_name} | ${description}`,
@@ -31,51 +31,62 @@ feedScene.hears('🔍 Feed', async (ctx) => {
     );
   } catch (error) {
     console.error(error);
+    return ctx.scene.enter('feed-scene');
   }
 });
 feedScene.hears('🌏 Post', (ctx) => {
-  ctx.scene.enter('post-wizard');
+  return ctx.scene.enter('post-wizard');
 });
 feedScene.leave((ctx) => ctx.reply('Leave feed.'));
 
 const postUpload = new Composer();
 postUpload.on(message('photo'), async (ctx) => {
-  const {
-    message: {
-      photo: photos,
-      from: { id },
-    },
-  } = ctx;
-  const url = await ctx.telegram.getFileLink(photos.at(-1).file_id);
-  const path = await saveFileFromURL(url);
-  const { id_user } = await getUser(id);
-  await createFeed({
-    photo: path,
-    photo_telegram_server: url.href,
-    id_user,
-  });
+  try {
+    const {
+      message: {
+        photo: photos,
+        from: { id },
+      },
+    } = ctx;
+    const url = await ctx.telegram.getFileLink(photos.at(-1).file_id);
+    const path = await saveFileFromURL(url);
+    const { id_user } = await getUser(id);
+    await createFeed({
+      photo: path,
+      photo_telegram_server: url.href,
+      id_user,
+    });
 
-  await ctx.reply('Please enter your post description.');
-  return ctx.wizard.next();
+    await ctx.reply('Please enter your post description.');
+    return ctx.wizard.next();
+  } catch (error) {
+    console.error(error);
+    return ctx.scene.enter('post-wizard');
+  }
 });
 postUpload.on('message', (ctx) => {
-  ctx.reply('Please upload your post photo.');
+  return ctx.reply('Please upload your post photo.');
 });
 
 const postWizard = new Scenes.WizardScene(
   'post-wizard',
   postUpload,
   async (ctx) => {
-    const {
-      message: { text },
-      from: { id },
-    } = ctx;
-    const { id_user } = await getUser(id);
-    const { id_feed } = await getLatestFeedByIdUser(id_user);
-    await updateFeed(id_feed, {
-      description: text,
-    });
-    return ctx.scene.enter('feed-scene');
+    try {
+      const {
+        message: { text },
+        from: { id },
+      } = ctx;
+      const { id_user } = await getUser(id);
+      const { id_feed } = await getLatestFeedByIdUser(id_user);
+      await updateFeed(id_feed, {
+        description: text,
+      });
+      return ctx.scene.enter('feed-scene');
+    } catch (error) {
+      console.error(error);
+      return ctx.scene.enter('post-wizard');
+    }
   }
 );
 

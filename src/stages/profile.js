@@ -26,7 +26,10 @@ profileScene.hears('💁 My profile', async (ctx) => {
         caption: `${pf_name} | ${pf_description}`,
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
-          [Markup.button.callback('Delete profile', '/delete-profile')],
+          [
+            Markup.button.callback('My posts', '/my-posts'),
+            Markup.button.callback('Delete profile', '/delete-profile'),
+          ],
         ]),
       }
     );
@@ -34,6 +37,10 @@ profileScene.hears('💁 My profile', async (ctx) => {
     console.error(error);
     return ctx.scene.enter('profile-scene');
   }
+});
+profileScene.action('/my-posts', (ctx) => {
+  console.log('ctx: ', ctx.from.id);
+  console.log('How about my posts?');
 });
 profileScene.action('/delete-profile', (ctx) => {
   console.log('ctx: ', ctx.from.id);

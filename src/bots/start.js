@@ -7,6 +7,5 @@ bot.start(async (ctx) => {
     ...from,
     id_telegram: id,
   });
-  ctx.reply('Bot start');
   ctx.scene.enter('feed-scene');
 });

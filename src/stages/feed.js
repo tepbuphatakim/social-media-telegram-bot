@@ -61,7 +61,7 @@ postUpload.on(message('photo'), async (ctx) => {
     return ctx.wizard.next();
   } catch (error) {
     console.error(error);
-    return ctx.scene.enter('post-wizard');
+    return ctx.scene.enter('feed-scene');
   }
 });
 postUpload.on('message', (ctx) => {

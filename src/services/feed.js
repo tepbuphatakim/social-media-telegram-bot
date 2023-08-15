@@ -27,3 +27,11 @@ export function updateFeed(id_feed, feed) {
     },
   });
 }
+
+export function deleteFeed(id_feed) {
+  return Feed.destroy({
+    where: {
+      id_feed,
+    },
+  });
+}

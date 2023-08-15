@@ -2,6 +2,7 @@ import { Composer, Scenes, Markup } from 'telegraf';
 import { message } from 'telegraf/filters';
 import { readFile, saveFileFromURL } from '../services/storage.js';
 import { getUser, saveUser } from '../services/user.js';
+import { getLatestFeedByIdUser, deleteFeed } from '../services/feed.js';
 
 const profileScene = new Scenes.BaseScene('profile-scene');
 profileScene.enter((ctx) => {
@@ -26,10 +27,7 @@ profileScene.hears('💁 My profile', async (ctx) => {
         caption: `${pf_name} | ${pf_description}`,
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
-          [
-            Markup.button.callback('My posts', '/my-posts'),
-            Markup.button.callback('Delete profile', '/delete-profile'),
-          ],
+          [Markup.button.callback('My posts', '/my-posts')],
         ]),
       }
     );
@@ -38,13 +36,30 @@ profileScene.hears('💁 My profile', async (ctx) => {
     return ctx.scene.enter('profile-scene');
   }
 });
-profileScene.action('/my-posts', (ctx) => {
-  console.log('ctx: ', ctx.from.id);
-  console.log('How about my posts?');
+profileScene.action('/my-posts', async (ctx) => {
+  try {
+    const { id_user, pf_name } = await getUser(ctx.from.id);
+    const { id_feed, photo, description } = await getLatestFeedByIdUser(
+      id_user
+    );
+    return ctx.replyWithPhoto(
+      { source: readFile(photo) },
+      {
+        caption: `${pf_name} | ${description}`,
+        parse_mode: 'Markdown',
+        ...Markup.inlineKeyboard([
+          [Markup.button.callback('Delete', `/delete-post-${id_feed}`)],
+        ]),
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    return ctx.scene.enter('profile-scene');
+  }
 });
-profileScene.action('/delete-profile', (ctx) => {
-  console.log('ctx: ', ctx.from.id);
-  console.log('Can delete now dude?');
+profileScene.action(/delete-post-(.+)/, async (ctx) => {
+  await deleteFeed(ctx.match[1]);
+  return ctx.reply('Deleted post.');
 });
 profileScene.hears('👷 Setup profile', (ctx) => {
   ctx.scene.enter('setup-profile-wizard');
@@ -71,7 +86,7 @@ profileUpload.on(message('photo'), async (ctx) => {
     return ctx.wizard.next();
   } catch (error) {
     console.error(error);
-    return ctx.scene.enter('setup-profile-wizard');
+    return ctx.scene.enter('profile-scene');
   }
 });
 profileUpload.on('message', (ctx) => {

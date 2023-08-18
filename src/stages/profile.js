@@ -24,7 +24,7 @@ profileScene.hears('💁 My profile', async (ctx) => {
     return ctx.replyWithPhoto(
       { source: readFile(pf_photo) },
       {
-        caption: `${pf_name} | ${pf_description}`,
+        caption: `${pf_name ?? '...'} | ${pf_description ?? '...'}`,
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
           [Markup.button.callback('My posts', '/my-posts')],
@@ -45,7 +45,7 @@ profileScene.action('/my-posts', async (ctx) => {
     return ctx.replyWithPhoto(
       { source: readFile(photo) },
       {
-        caption: `${pf_name} | ${description}`,
+        caption: `${pf_name ?? '...'} | ${description ?? '...'}`,
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
           [Markup.button.callback('Delete', `/delete-post-${id_feed}`)],

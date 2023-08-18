@@ -25,7 +25,7 @@ feedScene.hears('🔍 Feed', async (ctx) => {
     return ctx.replyWithPhoto(
       { source: readFile(photo) },
       {
-        caption: `${pf_name} | ${description}`,
+        caption: `${pf_name ?? '...'} | ${description ?? '...'}`,
         parse_mode: 'Markdown',
       }
     );

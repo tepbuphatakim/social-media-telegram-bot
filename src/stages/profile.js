@@ -37,29 +37,14 @@ profileScene.hears('💁 My profile', async (ctx) => {
   }
 });
 profileScene.action('/my-posts', async (ctx) => {
-  try {
-    const { id_user, pf_name } = await getUser(ctx.from.id);
-    const { id_feed, photo, description } = await getLatestFeedByIdUser(
-      id_user
-    );
-    return ctx.replyWithPhoto(
-      { source: readFile(photo) },
-      {
-        caption: `${pf_name ?? '...'} | ${description ?? '...'}`,
-        parse_mode: 'Markdown',
-        ...Markup.inlineKeyboard([
-          [Markup.button.callback('Delete', `/delete-post-${id_feed}`)],
-        ]),
-      }
-    );
-  } catch (error) {
-    console.error(error);
-    return ctx.scene.enter('profile-scene');
-  }
+  return replyMyPost(ctx);
 });
 profileScene.action(/delete-post-(.+)/, async (ctx) => {
   await deleteFeed(ctx.match[1]);
   return ctx.reply('Deleted post.');
+});
+profileScene.action(/next-post-(.+)/, async (ctx) => {
+  return replyMyPost(ctx, ctx.match[1]);
 });
 profileScene.hears('👷 Setup profile', (ctx) => {
   ctx.scene.enter('setup-profile-wizard');
@@ -134,5 +119,30 @@ const setupProfileWizard = new Scenes.WizardScene(
     }
   }
 );
+
+async function replyMyPost(ctx, fromIdFeed = null) {
+  try {
+    const { id_user, pf_name } = await getUser(ctx.from.id);
+    const { id_feed, photo, description } = await getLatestFeedByIdUser(
+      id_user,
+      fromIdFeed
+    );
+
+    return ctx.replyWithPhoto(
+      { source: readFile(photo) },
+      {
+        caption: `${pf_name ?? '...'} | ${description ?? '...'}`,
+        parse_mode: 'Markdown',
+        ...Markup.inlineKeyboard([
+          [Markup.button.callback('Delete', `/delete-post-${id_feed}`)],
+          [Markup.button.callback('▼', `/next-post-${id_feed}`)],
+        ]),
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    return ctx.scene.enter('profile-scene');
+  }
+}
 
 export default [profileScene, setupProfileWizard];

@@ -1,5 +1,6 @@
 import sequelize from '../../database/index.js';
 import Feed from '../models/Feed.js';
+import { Op } from 'sequelize';
 
 export function getFeed() {
   return Feed.findOne({
@@ -7,10 +8,15 @@ export function getFeed() {
   });
 }
 
-export function getLatestFeedByIdUser(id_user) {
+export function getLatestFeedByIdUser(id_user, fromIdFeed = null) {
   return Feed.findOne({
     where: {
       id_user,
+      ...(fromIdFeed && {
+        id_feed: {
+          [Op.lt]: fromIdFeed,
+        },
+      }),
     },
     order: [['id_feed', 'DESC']],
   });

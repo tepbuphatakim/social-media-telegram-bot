@@ -20,6 +20,10 @@ export async function saveFileFromURL(url) {
   return writeFile(file.data, `${fileName}.${fileExt}`);
 }
 
+export function deleteFile(fileName) {
+  return fs.unlinkSync(path.resolve(storagePath, fileName));
+}
+
 function writeFile(fileBuffer, fileName) {
   if (!fs.existsSync(storagePath)) {
     fs.mkdirSync(storagePath, {

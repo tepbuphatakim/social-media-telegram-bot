@@ -75,7 +75,13 @@ profileUpload.on(message('photo'), async (ctx) => {
   }
 });
 profileUpload.on('message', (ctx) => {
-  ctx.reply('Please upload your profile photo.');
+  return ctx.reply('Please upload your profile photo.', {
+    parse_mode: 'Markdown',
+    ...Markup.inlineKeyboard([[Markup.button.callback('Cancel', '/cancel')]]),
+  });
+});
+profileUpload.action('/cancel', async (ctx) => {
+  return ctx.scene.enter('profile-scene');
 });
 
 const setupProfileWizard = new Scenes.WizardScene(

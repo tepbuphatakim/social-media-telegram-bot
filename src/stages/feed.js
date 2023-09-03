@@ -65,7 +65,13 @@ postUpload.on(message('photo'), async (ctx) => {
   }
 });
 postUpload.on('message', (ctx) => {
-  return ctx.reply('Please upload your post photo.');
+  return ctx.reply('Please upload your post photo.', {
+    parse_mode: 'Markdown',
+    ...Markup.inlineKeyboard([[Markup.button.callback('Cancel', '/cancel')]]),
+  });
+});
+postUpload.action('/cancel', async (ctx) => {
+  return ctx.scene.enter('feed-scene');
 });
 
 const postWizard = new Scenes.WizardScene(

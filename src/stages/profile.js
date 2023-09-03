@@ -1,6 +1,6 @@
 import { Composer, Scenes, Markup } from 'telegraf';
 import { message } from 'telegraf/filters';
-import { readFile, saveFileFromURL } from '../services/storage.js';
+import { readFile, saveFileFromURL, deleteFile } from '../services/storage.js';
 import { getUser, saveUser } from '../services/user.js';
 import { getLatestFeedByIdUser, deleteFeed } from '../services/feed.js';
 
@@ -62,6 +62,8 @@ profileUpload.on(message('photo'), async (ctx) => {
     } = ctx;
     const url = await ctx.telegram.getFileLink(photos.at(-1).file_id);
     const path = await saveFileFromURL(url);
+    const { pf_photo } = await getUser(id);
+    deleteFile(pf_photo);
     await saveUser({
       pf_photo: path,
       pf_photo_telegram_server: url.href,

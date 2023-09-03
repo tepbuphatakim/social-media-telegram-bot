@@ -1,6 +1,7 @@
 import sequelize from '../../database/index.js';
 import Feed from '../models/Feed.js';
 import { Op } from 'sequelize';
+import { deleteFile } from './storage.js';
 
 export function getFeed() {
   return Feed.findOne({
@@ -34,10 +35,9 @@ export function updateFeed(id_feed, feed) {
   });
 }
 
-export function deleteFeed(id_feed) {
-  return Feed.destroy({
-    where: {
-      id_feed,
-    },
-  });
+export async function deleteFeed(id_feed) {
+  const feed = await Feed.findByPk(id_feed);
+  if (!feed) throw new Error('Cannot find feed with specified id.');
+  deleteFile(feed.photo);
+  return feed.destroy();
 }

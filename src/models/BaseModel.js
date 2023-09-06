@@ -2,16 +2,19 @@ import { Model } from 'sequelize';
 import sequelize from '../../database/index.js';
 
 class BaseModel extends Model {
-  static async createOrUpdate(user, condition) {
+  static async createOrUpdate(data, condition) {
     const item = await this.findOne({
       where: condition,
     });
     if (item) {
-      return this.update(user, {
+      return this.update(data, {
         where: condition,
       });
     }
-    return this.create(user);
+    return this.create({
+      ...data,
+      ...condition,
+    });
   }
 
   static CONFIG = {

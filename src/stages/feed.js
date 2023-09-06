@@ -6,7 +6,7 @@ import {
   createFeed,
   updateFeed,
 } from '../services/feed.js';
-import { getUser, getUserById } from '../services/user.js';
+import { getUser, getUserById, addFriend } from '../services/user.js';
 import { readFile, saveFileFromURL } from '../services/storage.js';
 
 const feedScene = new Scenes.BaseScene('feed-scene');
@@ -27,12 +27,24 @@ feedScene.hears('🔍 Feed', async (ctx) => {
       {
         caption: `${pf_name ?? '...'} | ${description ?? '...'}`,
         parse_mode: 'Markdown',
+        ...Markup.inlineKeyboard([
+          [Markup.button.callback('Add friend', `/add-friend-${id_user}`)],
+        ]),
       }
     );
   } catch (error) {
     console.error(error);
     return ctx.scene.enter('feed-scene');
   }
+});
+feedScene.action(/add-friend-(.+)/, async (ctx) => {
+  const { id_user } = await getUser(ctx.from.id);
+  if (Number(id_user) === Number(ctx.match[1])) {
+    return ctx.reply(`You can't add yourself.`);
+  }
+
+  await addFriend(id_user, ctx.match[1]);
+  return ctx.reply('Added friend.');
 });
 feedScene.hears('🌏 Post', (ctx) => {
   return ctx.scene.enter('post-wizard');

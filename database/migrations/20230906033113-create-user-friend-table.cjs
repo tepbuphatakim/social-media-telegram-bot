@@ -1,6 +1,8 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
-    const { attributes } = await import('../../src/models/UserFriend.js');
+    const { attributes, uniqueKeys } = await import(
+      '../../src/models/UserFriend.js'
+    );
     const transaction = await queryInterface.sequelize.transaction();
 
     try {
@@ -19,7 +21,7 @@ module.exports = {
             defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
           },
         },
-        { transaction }
+        { uniqueKeys, transaction }
       );
 
       await transaction.commit();

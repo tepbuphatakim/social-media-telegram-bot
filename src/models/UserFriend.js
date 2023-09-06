@@ -36,8 +36,16 @@ export const attributes = {
   },
 };
 
+export const uniqueKeys = {
+  user_friend: {
+    customIndex: true,
+    fields: ['id_user', 'id_friend'],
+  },
+};
+
 UserFriend.init(attributes, {
   ...BaseModel.CONFIG,
+  uniqueKeys,
   modelName: 'UserFriend',
   tableName: 'user_friend',
 });

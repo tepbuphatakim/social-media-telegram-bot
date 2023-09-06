@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import BaseModel from './BaseModel.js';
+import { FRIEND_STATUS } from '../constants/index.js';
 
 class UserFriend extends BaseModel {}
 
@@ -27,6 +28,11 @@ export const attributes = {
       model: 'user',
       key: 'id_user',
     },
+  },
+  status: {
+    type: DataTypes.ENUM(Object.values(FRIEND_STATUS)),
+    allowNull: false,
+    defaultValue: FRIEND_STATUS.PENDING,
   },
 };
 

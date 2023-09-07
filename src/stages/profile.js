@@ -1,8 +1,9 @@
 import { Composer, Scenes, Markup } from 'telegraf';
 import { message } from 'telegraf/filters';
 import { readFile, saveFileFromURL, deleteFile } from '../services/storage.js';
-import { getUser, saveUser } from '../services/user.js';
+import { getUser, saveUser, getFriends } from '../services/user.js';
 import { getLatestFeedByIdUser, deleteFeed } from '../services/feed.js';
+import { FRIEND_STATUS } from '../constants/index.js';
 
 const profileScene = new Scenes.BaseScene('profile-scene');
 profileScene.enter((ctx) => {
@@ -49,6 +50,23 @@ profileScene.action(/next-post-(.+)/, async (ctx) => {
 });
 profileScene.hears('👷 Setup profile', (ctx) => {
   ctx.scene.enter('setup-profile-wizard');
+});
+profileScene.hears('🤝 My friends', async (ctx) => {
+  const { id_user } = await getUser(ctx.from.id);
+  const friends = await getFriends(id_user, FRIEND_STATUS.CONFIRMED);
+  const response = friends.length
+    ? friends
+        .map(({ friend }) =>
+          friend.username ? `@${friend.username}` : 'No username.'
+        )
+        .join('\n')
+    : 'No friends.';
+  return ctx.reply(response, {
+    parse_mode: 'Markdown',
+    ...Markup.inlineKeyboard([
+      [Markup.button.callback('Friends request', `/friends-request`)],
+    ]),
+  });
 });
 
 const profileUpload = new Composer();

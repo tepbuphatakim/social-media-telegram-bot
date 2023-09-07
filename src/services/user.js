@@ -24,3 +24,14 @@ export function addFriend(id_user, id_friend) {
     where: { id_user, id_friend },
   });
 }
+
+export function getFriends(id_user, status) {
+  return UserFriend.findAll({
+    where: { id_user, status },
+    include: [
+      {
+        association: 'friend',
+      },
+    ],
+  });
+}

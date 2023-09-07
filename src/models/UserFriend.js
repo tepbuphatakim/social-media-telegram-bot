@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import BaseModel from './BaseModel.js';
 import { FRIEND_STATUS } from '../constants/index.js';
+import User from './User.js';
 
 class UserFriend extends BaseModel {}
 
@@ -48,6 +49,16 @@ UserFriend.init(attributes, {
   uniqueKeys,
   modelName: 'UserFriend',
   tableName: 'user_friend',
+});
+
+UserFriend.belongsTo(User, {
+  foreignKey: 'id_user',
+  as: 'user',
+});
+
+UserFriend.belongsTo(User, {
+  foreignKey: 'id_friend',
+  as: 'friend',
 });
 
 export default UserFriend;

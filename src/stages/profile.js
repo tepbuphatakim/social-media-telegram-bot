@@ -1,7 +1,12 @@
 import { Composer, Scenes, Markup } from 'telegraf';
 import { message } from 'telegraf/filters';
 import { readFile, saveFileFromURL, deleteFile } from '../services/storage.js';
-import { getUser, saveUser, getFriends } from '../services/user.js';
+import {
+  getUser,
+  saveUser,
+  getFriends,
+  getFriendsRequest,
+} from '../services/user.js';
 import { getLatestFeedByIdUser, deleteFeed } from '../services/feed.js';
 import { FRIEND_STATUS } from '../constants/index.js';
 
@@ -68,6 +73,21 @@ profileScene.hears('🤝 My friends', async (ctx) => {
     ]),
   });
 });
+// profileScene.action('/friends-request', async (ctx) => {
+//   const { id_user } = await getUser(ctx.from.id);
+//   const friendsRequest = await getFriendsRequest(
+//     id_user,
+//     FRIEND_STATUS.PENDING
+//   );
+//   const response = friendsRequest.length
+//     ? friendsRequest
+//         .map(({ user }) =>
+//           user.username ? `@${user.username}` : 'No username.'
+//         )
+//         .join('\n')
+//     : 'No friends request.';
+//   return ctx.scene.enter('Test');
+// });
 
 const profileUpload = new Composer();
 profileUpload.on(message('photo'), async (ctx) => {

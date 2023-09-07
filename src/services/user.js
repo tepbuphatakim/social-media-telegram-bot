@@ -19,7 +19,7 @@ export function getUserById(id_user) {
   return User.findByPk(id_user);
 }
 
-export function addFriend(id_user, id_friend) {
+export async function addFriend(id_user, id_friend) {
   return UserFriend.findOrCreate({
     where: { id_user, id_friend },
   });
@@ -31,6 +31,17 @@ export function getFriends(id_user, status) {
     include: [
       {
         association: 'friend',
+      },
+    ],
+  });
+}
+
+export function getFriendsRequest(id_friend, status) {
+  return UserFriend.findAll({
+    where: { id_friend, status },
+    include: [
+      {
+        association: 'user',
       },
     ],
   });

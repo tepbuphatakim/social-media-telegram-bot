@@ -49,7 +49,6 @@ feedScene.action(/add-friend-(.+)/, async (ctx) => {
 feedScene.hears('🌏 Post', (ctx) => {
   return ctx.scene.enter('post-wizard');
 });
-feedScene.leave((ctx) => ctx.reply('Leave feed.'));
 
 const postUpload = new Composer();
 postUpload.on(message('photo'), async (ctx) => {
@@ -73,6 +72,7 @@ postUpload.on(message('photo'), async (ctx) => {
     return ctx.wizard.next();
   } catch (error) {
     console.error(error);
+    ctx.reply('No profile setup yet.');
     return ctx.scene.enter('feed-scene');
   }
 });

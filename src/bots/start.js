@@ -7,5 +7,6 @@ bot.start(async (ctx) => {
     ...from,
     id_telegram: id,
   });
-  ctx.scene.enter('feed-scene');
+  await ctx.reply('Please setup your profile.');
+  ctx.scene.enter('setup-profile-wizard');
 });

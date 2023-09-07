@@ -13,6 +13,10 @@ profileScene.enter((ctx) => {
         Markup.button.callback('💁 My profile'),
         Markup.button.callback('👷 Setup profile'),
       ],
+      [
+        Markup.button.callback('✍️ My posts'),
+        Markup.button.callback('🤝 My friends'),
+      ],
     ]).resize()
   );
 });
@@ -25,18 +29,15 @@ profileScene.hears('💁 My profile', async (ctx) => {
       { source: readFile(pf_photo) },
       {
         caption: `${pf_name ?? '...'} | ${pf_description ?? '...'}`,
-        parse_mode: 'Markdown',
-        ...Markup.inlineKeyboard([
-          [Markup.button.callback('My posts', '/my-posts')],
-        ]),
       }
     );
   } catch (error) {
     console.error(error);
+    ctx.reply('No profile setup yet.');
     return ctx.scene.enter('profile-scene');
   }
 });
-profileScene.action('/my-posts', async (ctx) => {
+profileScene.hears('✍️ My posts', async (ctx) => {
   return replyMyPost(ctx);
 });
 profileScene.action(/delete-post-(.+)/, async (ctx) => {
@@ -49,7 +50,6 @@ profileScene.action(/next-post-(.+)/, async (ctx) => {
 profileScene.hears('👷 Setup profile', (ctx) => {
   ctx.scene.enter('setup-profile-wizard');
 });
-profileScene.leave((ctx) => ctx.reply('Leave profile.'));
 
 const profileUpload = new Composer();
 profileUpload.on(message('photo'), async (ctx) => {
@@ -149,6 +149,7 @@ async function replyMyPost(ctx, fromIdFeed = null) {
     );
   } catch (error) {
     console.error(error);
+    ctx.reply('No more post.');
     return ctx.scene.enter('profile-scene');
   }
 }

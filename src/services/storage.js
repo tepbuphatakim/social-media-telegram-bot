@@ -21,6 +21,9 @@ export async function saveFileFromURL(url) {
 }
 
 export function deleteFile(fileName) {
+  if (!fileName || !fs.existsSync(path.resolve(storagePath, fileName))) {
+    return false;
+  }
   return fs.unlinkSync(path.resolve(storagePath, fileName));
 }
 

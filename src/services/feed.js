@@ -38,6 +38,7 @@ export function updateFeed(id_feed, feed) {
 export async function deleteFeed(id_feed) {
   const feed = await Feed.findByPk(id_feed);
   if (!feed) throw new Error('Cannot find feed with specified id.');
+
   deleteFile(feed.photo);
   return feed.destroy();
 }

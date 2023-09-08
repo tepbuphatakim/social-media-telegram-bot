@@ -6,9 +6,9 @@ import {
   saveUser,
   getFriends,
   getFriendsRequest,
+  acceptFriendRequest,
 } from '../services/user.js';
 import { getLatestFeedByIdUser, deleteFeed } from '../services/feed.js';
-import { FRIEND_STATUS } from '../constants/index.js';
 
 const profileScene = new Scenes.BaseScene('profile-scene');
 profileScene.enter((ctx) => {
@@ -58,7 +58,7 @@ profileScene.hears('👷 Setup profile', (ctx) => {
 });
 profileScene.hears('🤝 My friends', async (ctx) => {
   const { id_user } = await getUser(ctx.from.id);
-  const friends = await getFriends(id_user, FRIEND_STATUS.CONFIRMED);
+  const friends = await getFriends(id_user);
   const response = friends.length
     ? friends
         .map(({ friend }) =>
@@ -73,21 +73,29 @@ profileScene.hears('🤝 My friends', async (ctx) => {
     ]),
   });
 });
-// profileScene.action('/friends-request', async (ctx) => {
-//   const { id_user } = await getUser(ctx.from.id);
-//   const friendsRequest = await getFriendsRequest(
-//     id_user,
-//     FRIEND_STATUS.PENDING
-//   );
-//   const response = friendsRequest.length
-//     ? friendsRequest
-//         .map(({ user }) =>
-//           user.username ? `@${user.username}` : 'No username.'
-//         )
-//         .join('\n')
-//     : 'No friends request.';
-//   return ctx.scene.enter('Test');
-// });
+profileScene.action('/friends-request', async (ctx) => {
+  const { id_user } = await getUser(ctx.from.id);
+  const friendsRequest = await getFriendsRequest(id_user);
+  if (!friendsRequest.length) {
+    return ctx.reply('No friends request.');
+  }
+  friendsRequest.forEach(({ id_user_friend, user }) => {
+    ctx.reply(user.username ? `@${user.username}` : 'No username.', {
+      parse_mode: 'Markdown',
+      ...Markup.inlineKeyboard([
+        [Markup.button.callback('Confirm', `/confirm-${id_user_friend}`)],
+      ]),
+    });
+  });
+});
+profileScene.action(/confirm-(.+)/, async (ctx) => {
+  try {
+    await acceptFriendRequest(ctx.match[1]);
+    return ctx.reply('Accepted friend request.');
+  } catch (_) {
+    return ctx.scene.enter('profile-scene');
+  }
+});
 
 const profileUpload = new Composer();
 profileUpload.on(message('photo'), async (ctx) => {

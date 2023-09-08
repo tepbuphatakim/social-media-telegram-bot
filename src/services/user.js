@@ -1,7 +1,6 @@
 import User from '../models/User.js';
 import UserFriend from '../models/UserFriend.js';
 import { FRIEND_STATUS } from '../constants/index.js';
-import { Op } from 'sequelize';
 
 const { PENDING, CONFIRMED } = FRIEND_STATUS;
 

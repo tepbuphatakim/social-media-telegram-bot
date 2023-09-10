@@ -4,6 +4,10 @@ import { FRIEND_STATUS } from '../constants/index.js';
 
 const { PENDING, CONFIRMED } = FRIEND_STATUS;
 
+export function getAllUsers() {
+  return User.findAndCountAll();
+}
+
 export function saveUser(user) {
   return User.createOrUpdate(user, {
     id_telegram: user.id_telegram,
@@ -20,6 +24,13 @@ export function getUser(id_telegram) {
 
 export function getUserById(id_user) {
   return User.findByPk(id_user);
+}
+
+export async function deleteUser(idUser) {
+  const user = await User.findByPk(idUser);
+  if (!user) throw new Error('Cannot find user with specified id.');
+
+  return User.destroy();
 }
 
 export async function addFriend(id_user, id_friend) {

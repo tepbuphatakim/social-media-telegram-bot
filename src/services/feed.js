@@ -3,6 +3,10 @@ import Feed from '../models/Feed.js';
 import { Op } from 'sequelize';
 import { deleteFile } from './storage.js';
 
+export function getAllFeeds() {
+  return Feed.findAndCountAll();
+}
+
 export function getFeed() {
   return Feed.findOne({
     order: sequelize.random(),

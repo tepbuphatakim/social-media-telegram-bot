@@ -2,9 +2,12 @@ import sequelize from '../../database/index.js';
 import Feed from '../models/Feed.js';
 import { Op } from 'sequelize';
 import { deleteFile } from './storage.js';
+import { paginate } from '../utils/paginate.js';
 
-export function getAllFeeds() {
-  return Feed.findAndCountAll();
+export function getAllFeeds({ page, limit }) {
+  return Feed.findAndCountAll({
+    ...paginate({ page, limit }),
+  });
 }
 
 export function getFeed() {

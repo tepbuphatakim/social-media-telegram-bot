@@ -1,11 +1,14 @@
 import User from '../models/User.js';
 import UserFriend from '../models/UserFriend.js';
 import { FRIEND_STATUS } from '../constants/index.js';
+import { paginate } from '../utils/paginate.js';
 
 const { PENDING, CONFIRMED } = FRIEND_STATUS;
 
-export function getAllUsers() {
-  return User.findAndCountAll();
+export function getAllUsers({ page, limit }) {
+  return User.findAndCountAll({
+    ...paginate({ page, limit }),
+  });
 }
 
 export function saveUser(user) {

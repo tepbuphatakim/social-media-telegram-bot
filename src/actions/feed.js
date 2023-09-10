@@ -2,7 +2,8 @@ import { getAllFeeds, deleteFeed } from '../services/feed.js';
 
 export async function getAll(req, res, next) {
   try {
-    const feeds = await getAllFeeds();
+    const { page, limit } = req.query;
+    const feeds = await getAllFeeds({ page, limit });
     res.send(feeds);
   } catch (error) {
     next(error);

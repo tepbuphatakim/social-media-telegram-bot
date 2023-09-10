@@ -4,8 +4,9 @@ import { Op } from 'sequelize';
 import { deleteFile } from './storage.js';
 import { paginate } from '../utils/paginate.js';
 
-export function getAllFeeds({ page, limit }) {
+export function getAllFeeds({ id_user, page, limit }) {
   return Feed.findAndCountAll({
+    where: { ...(id_user && { id_user }) },
     ...paginate({ page, limit }),
   });
 }

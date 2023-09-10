@@ -1,9 +1,8 @@
 import { Router } from 'express';
-import { getAll, deleteById } from '../actions/user.js';
+import { getAll } from '../actions/friend.js';
 
 const router = new Router();
 
 router.get('/', getAll);
-router.delete('/:id', deleteById);
 
 export default router;

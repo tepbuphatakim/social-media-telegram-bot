@@ -1,10 +1,10 @@
-import { getAllUsers, deleteUser } from '../services/user.js';
+import { getAllFeeds, deleteFeed } from '../services/feed.js';
 
 export async function getAll(req, res, next) {
   try {
-    const { page, limit } = req.query;
-    const users = await getAllUsers({ page, limit });
-    res.send(users);
+    const { id_user, page, limit } = req.query;
+    const feeds = await getAllFeeds({ id_user, page, limit });
+    res.send(feeds);
   } catch (error) {
     next(error);
   }
@@ -12,7 +12,7 @@ export async function getAll(req, res, next) {
 
 export async function deleteById(req, res, next) {
   try {
-    await deleteUser(req.params.id);
+    await deleteFeed(req.params.id);
     res.send({ success: true });
   } catch (error) {
     next(error);

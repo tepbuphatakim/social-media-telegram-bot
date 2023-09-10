@@ -2,6 +2,14 @@ import sequelize from '../../database/index.js';
 import Feed from '../models/Feed.js';
 import { Op } from 'sequelize';
 import { deleteFile } from './storage.js';
+import { paginate } from '../utils/paginate.js';
+
+export function getAllFeeds({ id_user, page, limit }) {
+  return Feed.findAndCountAll({
+    where: { ...(id_user && { id_user }) },
+    ...paginate({ page, limit }),
+  });
+}
 
 export function getFeed() {
   return Feed.findOne({

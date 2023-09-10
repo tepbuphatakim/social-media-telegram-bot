@@ -1,8 +1,15 @@
 import User from '../models/User.js';
 import UserFriend from '../models/UserFriend.js';
 import { FRIEND_STATUS } from '../constants/index.js';
+import { paginate } from '../utils/paginate.js';
 
 const { PENDING, CONFIRMED } = FRIEND_STATUS;
+
+export function getAllUsers({ page, limit }) {
+  return User.findAndCountAll({
+    ...paginate({ page, limit }),
+  });
+}
 
 export function saveUser(user) {
   return User.createOrUpdate(user, {
@@ -20,6 +27,25 @@ export function getUser(id_telegram) {
 
 export function getUserById(id_user) {
   return User.findByPk(id_user);
+}
+
+export async function deleteUser(idUser) {
+  const user = await User.findByPk(idUser);
+  if (!user) throw new Error('Cannot find user with specified id.');
+
+  return User.destroy();
+}
+
+export function getAllFriends({ id_user, page, limit }) {
+  return UserFriend.findAndCountAll({
+    where: { ...(id_user && { id_user }), status: CONFIRMED },
+    include: [
+      {
+        association: 'friend',
+      },
+    ],
+    ...paginate({ page, limit }),
+  });
 }
 
 export async function addFriend(id_user, id_friend) {

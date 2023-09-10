@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAll, deleteById } from '../actions/user.js';
+import { getAll, deleteById } from '../actions/feed.js';
 
 const router = new Router();
 

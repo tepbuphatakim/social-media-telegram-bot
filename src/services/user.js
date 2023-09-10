@@ -36,6 +36,18 @@ export async function deleteUser(idUser) {
   return User.destroy();
 }
 
+export function getAllFriends({ id_user, page, limit }) {
+  return UserFriend.findAndCountAll({
+    where: { ...(id_user && { id_user }), status: CONFIRMED },
+    include: [
+      {
+        association: 'friend',
+      },
+    ],
+    ...paginate({ page, limit }),
+  });
+}
+
 export async function addFriend(id_user, id_friend) {
   return UserFriend.findOrCreate({
     where: { id_user, id_friend },

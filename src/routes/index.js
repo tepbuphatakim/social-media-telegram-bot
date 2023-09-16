@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import userRoute from './user.js';
 import feedRoute from './feed.js';
 import friendRoute from './friend.js';
@@ -9,6 +10,7 @@ import { authentication } from '../middlewares/auth.js';
 const app = express();
 const port = 3000;
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 

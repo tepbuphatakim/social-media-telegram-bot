@@ -2,10 +2,10 @@ FROM node:18-slim
 
 WORKDIR /app
 
-COPY package*.json /app
+COPY package*.json .
 
 RUN npm ci
 
-COPY . /app
+COPY . .
 
 CMD [ "node", "index.js" ]

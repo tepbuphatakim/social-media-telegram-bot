@@ -1,0 +1,19 @@
+@api = http://localhost:3000
+
+POST {{api}}/login
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "1231"
+}
+
+###
+
+GET {{api}}/feeds
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbiI6eyJpZF9hZG1pbiI6NCwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJHZKUU9aRVNoc3ZjTFJsQy9wV0gudHVJbTlVZENmUERDeFFjTUsvLnVMem5vcjh5UU13cVJDIn0sImlhdCI6MTY5NDg0NTg4NiwiZXhwIjoxNjk0OTMyMjg2fQ.rWYkrgidOnoW20z0U6JdJ96-hjGJA3AnwNgjwtvG38A
+
+###

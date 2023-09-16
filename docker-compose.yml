@@ -11,6 +11,7 @@ services:
       - tweet-elite
     volumes:
       - ./:/app
+      - /app/node_modules
 
   mariadb:
     image: mariadb:latest

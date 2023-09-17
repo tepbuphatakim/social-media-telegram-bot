@@ -33,7 +33,7 @@ export async function deleteUser(idUser) {
   const user = await User.findByPk(idUser);
   if (!user) throw new Error('Cannot find user with specified id.');
 
-  return User.destroy();
+  return user.destroy();
 }
 
 export function getAllFriends({ id_user, page, limit }) {

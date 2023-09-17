@@ -5,6 +5,7 @@ import userRoute from './user.js';
 import feedRoute from './feed.js';
 import friendRoute from './friend.js';
 import authRoute from './auth.js';
+import photoRoute from './photo.js';
 import { authentication } from '../middlewares/auth.js';
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(authRoute);
 
 app.use(authentication);
 
+app.use('/photos', photoRoute);
 app.use('/users', userRoute);
 app.use('/feeds', feedRoute);
 app.use('/friends', friendRoute);

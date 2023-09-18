@@ -8,6 +8,9 @@ const __dirname = path.dirname(__filename);
 const storagePath = path.resolve(__dirname, '../../', 'storages');
 
 export function readFile(fileName) {
+  if (!fileName || !fs.existsSync(path.resolve(storagePath, fileName))) {
+    return false;
+  }
   return fs.readFileSync(path.resolve(storagePath, fileName));
 }
 

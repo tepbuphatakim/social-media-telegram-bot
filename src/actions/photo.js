@@ -12,6 +12,10 @@ export async function previewPhoto(req, res, next) {
   try {
     const ext = req.params.path.split('.').at(-1);
     const photo = readFile(req.params.path);
+    if (!photo) {
+      return res.json();
+    }
+
     res.set('Content-Type', MIMETYPE[ext]).send(photo);
   } catch (error) {
     next(error);

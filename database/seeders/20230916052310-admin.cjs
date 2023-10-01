@@ -1,9 +1,8 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     const transaction = await queryInterface.sequelize.transaction();
-    const bcrypt = await import('bcrypt');
-
     try {
+      const bcrypt = await import('bcrypt');
       await queryInterface.bulkInsert('admin', [
         {
           email: 'admin@example.com',

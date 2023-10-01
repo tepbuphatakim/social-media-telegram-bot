@@ -4,9 +4,10 @@ module.exports = {
     try {
       const { faker } = await import('@faker-js/faker');
       const { saveFileFromURL } = await import('../../src/services/storage.js');
+      const dumpUserRows = 10;
 
       const users = await Promise.all(
-        [...Array(100)].map(async (_) => {
+        [...Array(dumpUserRows)].map(async (_) => {
           return {
             id_telegram: 0,
             first_name: faker.person.firstName(),
@@ -18,8 +19,27 @@ module.exports = {
           };
         })
       );
+      const firstUserId = await queryInterface.bulkInsert('user', users, {
+        transaction,
+      });
 
-      await queryInterface.bulkInsert('user', users);
+      const allUsersFeeds = [];
+      for (let i = firstUserId; i < firstUserId + dumpUserRows; i++) {
+        const feeds = await Promise.all(
+          [...Array(10)].map(async (_) => {
+            return {
+              id_user: i,
+              photo: await saveFileFromURL(faker.internet.avatar()),
+              description: faker.word.words({ count: 5 }),
+            };
+          })
+        );
+        allUsersFeeds.push(...feeds);
+      }
+      await queryInterface.bulkInsert('feed', allUsersFeeds, {
+        transaction,
+      });
+
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
@@ -29,7 +49,8 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     const transaction = await queryInterface.sequelize.transaction();
     try {
-      await queryInterface.bulkDelete('user', null, {});
+      await queryInterface.bulkDelete('user', null, { transaction });
+      await queryInterface.bulkDelete('feed', null, { transaction });
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();

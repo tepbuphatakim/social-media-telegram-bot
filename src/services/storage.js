@@ -19,7 +19,7 @@ export async function saveFileFromURL(url) {
     responseType: 'arraybuffer',
   });
   const fileName = random(32);
-  const fileExt = url.href.split('.').at(-1);
+  const fileExt = url.href ? url.href.split('.').at(-1) : url.split('.').at(-1);
   return writeFile(file.data, `${fileName}.${fileExt}`);
 }
 

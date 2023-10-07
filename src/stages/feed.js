@@ -25,7 +25,9 @@ feedScene.hears('🔍 Feed', async (ctx) => {
     return ctx.replyWithPhoto(
       { source: readFile(photo) },
       {
-        caption: `${pf_name ?? '...'} | ${description ?? '...'}`,
+        caption: `${pf_name.replace(/[*_]/g, ' ') ?? '...'} | ${
+          description.replace(/[*_]/g, ' ') ?? '...'
+        }`,
         parse_mode: 'Markdown',
         ...Markup.inlineKeyboard([
           [Markup.button.callback('Add friend', `/add-friend-${id_user}`)],

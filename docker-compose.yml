@@ -2,6 +2,7 @@ version: '3'
 
 services:
   app:
+    container_name: teb-be
     build: .
     ports:
       - '3000:3000'
@@ -14,6 +15,7 @@ services:
       - /app/node_modules
 
   mariadb:
+    container_name: teb-mariadb
     image: mariadb:latest
     ports:
       - '3310:3306'
@@ -26,6 +28,20 @@ services:
       - tweet-elite
     volumes:
       - mariadb_tweet_elite:/var/lib/mysql
+
+  phpmyadmin:
+    container_name: teb-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - '81:80'
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: ${DB_USERNAME}
+      PMA_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - mariadb
+    networks:
+      - tweet-elite
 
 networks:
   tweet-elite:

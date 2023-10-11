@@ -4,7 +4,7 @@ module.exports = {
     try {
       const { faker } = await import('@faker-js/faker');
       const { saveFileFromURL } = await import('../../src/services/storage.js');
-      const dumpUserRows = 10;
+      const dumpUserRows = 5;
 
       const users = await Promise.all(
         [...Array(dumpUserRows)].map(async (_) => {
@@ -26,7 +26,7 @@ module.exports = {
       const allUsersFeeds = [];
       for (let i = firstUserId; i < firstUserId + dumpUserRows; i++) {
         const feeds = await Promise.all(
-          [...Array(10)].map(async (_) => {
+          [...Array(5)].map(async (_) => {
             return {
               id_user: i,
               photo: await saveFileFromURL(faker.internet.avatar()),

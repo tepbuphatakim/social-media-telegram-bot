@@ -4,6 +4,8 @@ services:
   app:
     container_name: teb-be
     build: .
+    entrypoint: >
+      sh -c "cd /app && npm run migrate:up && node index.js"
     ports:
       - '3000:3000'
     depends_on:

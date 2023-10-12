@@ -6,7 +6,7 @@ Create a Telegram bot and get the bot token.
 
 ![create telegram bot](./docs/create-telegram-bot.jpg)
 
-## Configuration:
+## Configuration
 
 Copy .env.example and rename to .env.
 
@@ -20,7 +20,7 @@ The jwt secret key can be anything include a random string.
 .env: 
 
 ```bash
-BOT_TOKEN=1234567890:ABCDEFGHIJKLMNOPQURSTUVWXYZ
+BOT_TOKEN=6300302475:AAEzt7Hy9p048kSQMO7F6EasM0V911SYC-8
 JWT_SECRET_KEY=123
 
 DB_HOST=mariadb
@@ -34,7 +34,7 @@ DB_PASSWORD=root
 
 Get the application running.
 
-### Running Docker:
+### Running Docker
 
 If you already have Docker & Docker compose, run the docker compose command to get the application running below.
 
@@ -56,7 +56,7 @@ npx sequelize-cli db:seed:all
 
 Get the application running in your local with node and npm.
 
-### Install Node dependency:
+### Install Node dependency
 
 Installing dependency via npm.
 
@@ -66,7 +66,19 @@ npm version >= 8, node version >= 18.
 npm install
 ```
 
-### Running:
+Migrate to create the database tables.
+
+```bash
+npm run migrate:up
+```
+
+Seed dummy data.
+
+```bash
+npx sequelize-cli db:seed:all
+```
+
+### Running
 
 Running the application.
 
@@ -74,10 +86,16 @@ Running the application.
 npm run start
 ```
 
-### Running in development mode:
+### Running in development mode
 
 Running the application in development mode. This will refresh the app when code change.
 
 ```bash
 npm run dev
 ```
+
+## Result overview
+
+Setup Telegram bot menu and test it out.
+
+![start telegram bot](./docs/starting-telegram-bot.jpg)
